@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-
+import androidx.recyclerview.widget.AsyncListDiffer
 import com.example.myroomcorotiunes.model.Note
 import com.example.myroomcoroutinse.R
 
@@ -30,9 +31,25 @@ class NoteAdapter(var con:Context,private val onClick:(Note)->Unit,private val o
             layout_item.setOnClickListener { onClick(note) }
 
         }
-
-
     }
+        private val differCallback =
+            object : DiffUtil.ItemCallback<Note>() {
+                override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+                    return oldItem.id == newItem.id &&
+                            oldItem.title == newItem.title &&
+                            oldItem.description == newItem.description
+                }
+
+                override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+                    return oldItem == newItem
+                }
+
+            }
+
+
+        val differ = AsyncListDiffer(this, differCallback)
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(con).inflate(R.layout.note_item,parent,false)
         return ViewHolder(v)

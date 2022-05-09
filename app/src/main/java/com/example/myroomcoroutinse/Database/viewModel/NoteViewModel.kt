@@ -2,6 +2,7 @@ package com.example.myroomcorotiunes.Database.viewModel
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.room.Query
 import com.example.myroomcorotiunes.Database.repository.NoteRepository
 import com.example.myroomcorotiunes.model.Note
 import kotlinx.coroutines.launch
@@ -26,6 +27,12 @@ class NoteViewModel(application : Application): ViewModel() {
 
 
     fun getAllNote():LiveData<List<Note>> = noteRepository.getAllNote()
+
+    fun searchNote(query: String?) = noteRepository.searchNote(query)
+
+    fun searchDatabase(searchQuery: String): LiveData<List<Note>> {
+        return noteRepository.searchDatabase(searchQuery)
+    }
 
     class NoteViewModelFactory(private val application: Application): ViewModelProvider.Factory{
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

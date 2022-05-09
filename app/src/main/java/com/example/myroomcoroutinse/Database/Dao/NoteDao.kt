@@ -28,8 +28,9 @@ interface NoteDao {
     @Query("select * from note_table where title_col =:title")
     fun getNoteByTitle (title:String):LiveData<List<Note>>
 
-    @Query("SELECT * FROM note_table WHERE title_col LIKE :searchQuery OR description_col LIKE :searchQuery")
-    fun searchDatabase(searchQuery: String): List<Note>
 
+    @Query("SELECT * FROM note_table WHERE title_col LIKE :searchQuery " +
+            "OR description_col LIKE :searchQuery")
+    fun searchDatabase(searchQuery: String): LiveData<List<Note>>
 
 }

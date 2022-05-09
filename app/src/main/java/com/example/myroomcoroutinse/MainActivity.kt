@@ -3,6 +3,9 @@ package com.example.myroomcoroutinse
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,10 +15,10 @@ import com.example.myroomcorotiunes.model.Note
 import com.example.myroomcoroutinse.adapter.NoteAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     lateinit var recycler_view : RecyclerView
     lateinit var button_add_note : FloatingActionButton
-
+    lateinit var adapter: NoteAdapter
     private val noteViewModel: NoteViewModel by lazy {
         ViewModelProvider(this,NoteViewModel.NoteViewModelFactory(this.application))[NoteViewModel::class.java]
     }
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initControlls() {
-        val adapter: NoteAdapter = NoteAdapter(this@MainActivity,onItemClick,onItemDelete)
+        adapter = NoteAdapter(this@MainActivity,onItemClick,onItemDelete)
         recycler_view = findViewById(R.id.recycler_view)
         recycler_view.setHasFixedSize(true)
         recycler_view.layoutManager=LinearLayoutManager(this)
@@ -57,4 +60,68 @@ class MainActivity : AppCompatActivity() {
     private val onItemDelete:(Note)->Unit={
         noteViewModel.deleteNote(it)
     }
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+
+        adapter = NoteAdapter(this@MainActivity,onItemClick,onItemDelete)
+
+        noteViewModel.searchDatabase(searchQuery).observe(this, Observer {
+
+            adapter.setNotes(it)
+        })
+
+
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+
+//        val search = menu?.findItem(R.id.menu_search)
+//        val searchView = search?.actionView as? SearchView
+//        searchView?.isSubmitButtonEnabled = true
+//        searchView?.setOnQueryTextListener(this)
+        val search = menu?.findItem(R.id.menu_search)
+        val searchView = search?.actionView as androidx.appcompat.widget.SearchView
+        searchView.isSubmitButtonEnabled = true
+        searchView.setOnQueryTextListener(object: androidx.appcompat.widget.
+        SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    searchDatabase(query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    searchDatabase(newText)
+                }
+                return true
+            }
+
+        })
+        return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if(query != null){
+            searchDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if(query != null){
+            searchDatabase(query)
+        }
+        return true
+    }
+
+
+
+
+
 }
