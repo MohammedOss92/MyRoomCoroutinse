@@ -28,7 +28,6 @@ class NoteViewModel(application : Application): ViewModel() {
 
     fun getAllNote():LiveData<List<Note>> = noteRepository.getAllNote()
 
-    fun searchNote(query: String?) = noteRepository.searchNote(query)
 
     fun searchDatabase(searchQuery: String): LiveData<List<Note>> {
         return noteRepository.searchDatabase(searchQuery)

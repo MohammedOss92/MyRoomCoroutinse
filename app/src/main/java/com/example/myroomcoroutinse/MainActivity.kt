@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val searchQuery = "%$query%"
 
 
-        adapter = NoteAdapter(this@MainActivity,onItemClick,onItemDelete)
+//        adapter = NoteAdapter(this@MainActivity,onItemClick,onItemDelete)
 
         noteViewModel.searchDatabase(searchQuery).observe(this, Observer {
 
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 //        searchView?.setOnQueryTextListener(this)
         val search = menu?.findItem(R.id.menu_search)
         val searchView = search?.actionView as androidx.appcompat.widget.SearchView
-        searchView.isSubmitButtonEnabled = true
+
         searchView.setOnQueryTextListener(object: androidx.appcompat.widget.
         SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {

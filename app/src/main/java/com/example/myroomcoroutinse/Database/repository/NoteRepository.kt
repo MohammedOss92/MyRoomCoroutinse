@@ -26,7 +26,6 @@ class NoteRepository(app:Application) {
 
     fun getAllNote():LiveData<List<Note>> = noteDao.getAllNote()
 
-    fun searchNote(query:String?) = noteDao.searchNote(query)
 
     fun searchDatabase(searchQuery: String): LiveData<List<Note>> {
         return noteDao.searchDatabase(searchQuery)
